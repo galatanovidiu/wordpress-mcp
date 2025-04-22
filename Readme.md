@@ -1,0 +1,3 @@
+# Wordpress MCP
+
+Still WIP
