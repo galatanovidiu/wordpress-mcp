@@ -46,10 +46,3 @@ The plugin exposes several tools for interacting with WordPress:
 ### Adding New Tools
 
 To add new tools, create a new class that extends the appropriate base class and register your tools during the `wordpress_mcp_init` action.
-
-## Security
-
-- All operations require proper WordPress permissions
-- Input validation and sanitization for all operations
-- Session-based access control
-- Secure data handling through WordPress transients
