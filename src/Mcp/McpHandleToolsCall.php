@@ -64,12 +64,16 @@ class McpHandleToolsCall {
 		// Handle REST API alias if present.
 		if ( isset( $tool_callback['rest_alias'] ) ) {
 			try {
-				$request = new \WP_REST_Request( $tool_callback['rest_alias']['method'], $tool_callback['rest_alias']['route'] );
+				$route = $tool_callback['rest_alias']['route'];
+				// Replace route parameters with actual values.
+				foreach ( $args as $key => $value ) {
+					$pattern = '(?P<' . $key . '>[\\d]+)';
+					$route   = str_replace( $pattern, (string) $value, $route );
+				}
+				$request = new \WP_REST_Request( $tool_callback['rest_alias']['method'], $route );
 				foreach ( $args as $key => $value ) {
 					$request->set_param( $key, $value );
 				}
-
-				@ray( $request );
 
 				$rest_response = rest_do_request( $request );
 
@@ -80,7 +84,7 @@ class McpHandleToolsCall {
 						'id'      => $message['id'] ?? null,
 						'error'   => array(
 							'code'    => -32000,
-							'message' => 'REST API error occurred.',
+							'message' => 'REST API error occurred. ' . $rest_response->as_error()->get_error_message(),
 						),
 					);
 				} else {
