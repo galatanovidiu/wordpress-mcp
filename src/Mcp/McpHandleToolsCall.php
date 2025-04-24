@@ -18,7 +18,8 @@ class McpHandleToolsCall {
 	 */
 	public static function run( $message ) {
 		$tool_name = $message['params']['name'] ?? $message['name'] ?? '';
-		$args      = $message['params']['args'] ?? $message['args'] ?? array();
+		$args      = $message['params']['arguments'] ?? $message['arguments'] ?? array();
+
 
 		// Get the WordPress MCP instance.
 		$wpmcp = WordPressMcp::instance();
@@ -42,7 +43,6 @@ class McpHandleToolsCall {
 
 		// Get the tool callback.
 		$tool_callback = $tools_callbacks[ $tool_name ];
-		@ray( ['tool_callback' => $tool_callback] );
 
 		// Check permissions.
 		if ( isset( $tool_callback['permissions_callback'] ) && is_callable( $tool_callback['permissions_callback'] ) ) {
@@ -63,9 +63,9 @@ class McpHandleToolsCall {
 		}
 
 		// Handle REST API alias if present.
-		if ( isset( $tool_callback['rest_api_alias'] ) ) {
+		if ( isset( $tool_callback['rest_alias'] ) ) {
 			try {
-				$request = new \WP_REST_Request($tool_callback['rest_api_alias']['method'], $tool_callback['rest_api_alias']['route'] );
+				$request = new \WP_REST_Request($tool_callback['rest_alias']['method'], $tool_callback['rest_alias']['route'] );
 				$request->set_param( 'name', $tool_name );
 				$request->set_param( 'args', $args );
 
@@ -75,7 +75,7 @@ class McpHandleToolsCall {
 					// Handle REST API error.
 					$response = array(
 						'jsonrpc' => '2.0',
-						'id'      => $message['id'],
+						'id'      => $message['id'] ?? null,
 						'error'   => array(
 							'code'    => -32000,
 							'message' => 'REST API error occurred.',
@@ -84,7 +84,7 @@ class McpHandleToolsCall {
 				} else {
 					$response = array(
 						'jsonrpc' => '2.0',
-						'id'      => $message['id'],
+						'id'      => $message['id'] ?? null,
 						'result'  => $rest_response->get_data(),
 					);
 				}

@@ -81,6 +81,7 @@ class WordPressMcp {
 		add_action( 'init', array( $this, 'wordpress_mcp_init' ), PHP_INT_MAX );
 		$this->init_default_resources();
 		$this->init_default_tools();
+		$this->init_features_as_tools();
 
 		// Initialize supported methods.
 		$this->supported_methods = array(
@@ -116,6 +117,10 @@ class WordPressMcp {
 		new McpGetSiteInfo();
 	}
 
+	private function init_features_as_tools() {
+		new WpFeatures();
+	}
+
 	/**
 	 * Get the instance.
 	 *
@@ -143,7 +148,7 @@ class WordPressMcp {
 		$this->tools_callbacks[ $args['name'] ] = array(
 			'callback'             => $args['callback'],
 			'permissions_callback' => $args['permissions_callback'],
-			'rest_api_alias'       => $args['rest_api_alias'] ?? null,
+			'rest_alias'       => $args['rest_alias'] ?? null,
 		);
 
 		unset( $args['callback'] );

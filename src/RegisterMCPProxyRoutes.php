@@ -55,8 +55,6 @@ class RegisterMCPProxyRoutes {
      */
     public function handleRequest($request) {
         $params = $request->get_json_params();
-
-        @ray($params);
         
         if (empty($params) || !isset($params['method'])) {
             return new WP_Error(

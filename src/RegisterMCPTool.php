@@ -32,7 +32,7 @@ class RegisterMCPTool {
 	 * @return void
 	 */
 	private function register_tool(): void {
-		if ( ! empty( $this->args['rest_api_alias'] ) ) {
+		if ( ! empty( $this->args['rest_alias'] ) ) {
 			$this->get_args_from_rest_api();
 		} else {
 			WPMCP()->register_tool( $this->args );
@@ -45,8 +45,8 @@ class RegisterMCPTool {
 	 * @return void
 	 */
 	private function get_args_from_rest_api(): void {
-		$method = $this->args['rest_api_alias']['method'];
-		$route  = $this->args['rest_api_alias']['route'];
+		$method = $this->args['rest_alias']['method'];
+		$route  = $this->args['rest_alias']['route'];
 
 		// get a lsit of all registered rest routes.
 		$routes = rest_get_server()->get_routes();
@@ -148,9 +148,9 @@ class RegisterMCPTool {
 			throw new \InvalidArgumentException( 'The description is required.' );
 		}
 
-		// if rest_api_alias is provided, the rest of the arguments are not required.
-		if ( isset( $this->args['rest_api_alias'] ) ) {
-			$this->validate_rest_api_alias();
+		// if rest_alias is provided, the rest of the arguments are not required.
+		if ( isset( $this->args['rest_alias'] ) ) {
+			$this->validate_rest_alias();
 			return;
 		}
 
@@ -179,19 +179,19 @@ class RegisterMCPTool {
 	 * @return void
 	 * @throws \InvalidArgumentException When the rest api alias is invalid.
 	 */
-	private function validate_rest_api_alias(): void {
+	private function validate_rest_alias(): void {
 		// route is required.
-		if ( ! isset( $this->args['rest_api_alias']['route'] ) ) {
+		if ( ! isset( $this->args['rest_alias']['route'] ) ) {
 			throw new \InvalidArgumentException( 'The route is required.' );
 		}
 
 		// method is required.
-		if ( ! isset( $this->args['rest_api_alias']['method'] ) ) {
+		if ( ! isset( $this->args['rest_alias']['method'] ) ) {
 			throw new \InvalidArgumentException( 'The method is required.' );
 		}
 
 		// validate the method: must be one of the following: GET, POST, PUT, PATCH, DELETE.
-		if ( ! in_array( $this->args['rest_api_alias']['method'], array( 'GET', 'POST', 'PUT', 'PATCH', 'DELETE' ), true ) ) {
+		if ( ! in_array( $this->args['rest_alias']['method'], array( 'GET', 'POST', 'PUT', 'PATCH', 'DELETE' ), true ) ) {
 			throw new \InvalidArgumentException( 'The method must be one of the following: GET, POST, PUT, PATCH, DELETE.' );
 		}
 	}

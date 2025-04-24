@@ -125,7 +125,6 @@ class RegisterMCPRoutes {
 	 * @return \WP_REST_Response
 	 */
 	private function handle_sse_connection( $request ) {
-		@ray( args: array( 'handle_sse_connection' => $request ) );
 		// Prevent output buffering.
 		if ( ob_get_level() ) {
 			ob_end_clean();
@@ -156,14 +155,6 @@ class RegisterMCPRoutes {
 		$endpoint = rest_url( 'wpmcp/v1/sse' );
 		$url      = add_query_arg( 'sessionId', $session_id, $endpoint );
 
-		@ray(
-			array(
-				'url'     => $url,
-				'params'  => $request->get_params(),
-				'request' => $request,
-			)
-		);
-
 		// Send the endpoint event.
 		echo "event: endpoint\n";
 		echo 'data: ' . esc_url_raw( $url ) . "\n\n";
@@ -188,7 +179,6 @@ class RegisterMCPRoutes {
 			// Check for inactivity (no messages for more than 1 minute).
 			$time_since_last_message = McpData::get_time_since_last_message( $session_id );
 			if ( $time_since_last_message > 60 ) {
-				@ray( array( 'time_since_last_message' => $time_since_last_message ) );
 				McpData::delete_session( $session_id );
 				echo "event: close\n";
 				echo 'data: Connection closed due to inactivity (no messages for ' . esc_html( $time_since_last_message ) . ' seconds)' . "\n\n";
@@ -204,7 +194,6 @@ class RegisterMCPRoutes {
 			// Check if there are any messages in the queue for this session.
 			$first_message = McpData::get_first_message( $session_id );
 			if ( ! empty( $first_message ) ) {
-				@ray( args: array( 'first_message' => $first_message ) );
 				$this->handle_sse_message( $first_message );
 				flush();
 			}
@@ -245,16 +234,12 @@ class RegisterMCPRoutes {
 	private function handle_message( $request ) {
 		$session_id = $request->get_param( 'sessionId' );
 
-		@ray( array( 'handle_message' => $request ) );
-		@ray( array( 'request url' => $request->get_route() ) );
-
 		if ( ! $session_id ) {
 			return new \WP_REST_Response( 'SSE connection not established', 500 );
 		}
 
 		$content_type = $request->get_header( 'content-type' );
 		if ( 'application/json' !== $content_type ) {
-			@ray( array( 'unsupported content-type' => $content_type ) );
 			return new \WP_REST_Response( 'Unsupported content-type: ' . $content_type, 400 );
 		}
 

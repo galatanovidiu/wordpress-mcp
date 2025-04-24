@@ -60,8 +60,7 @@ class McpMessages {
 
 		// delete the message from the array.
 		$message = array_shift( $messages );
-		self::set_messages( $session_id, $messages );
-		@ray( array( 'get first message > set messages' => $messages ) );
+		self::set_messages( session_id: $session_id, $messages );
 		return $message;
 	}
 
@@ -74,12 +73,6 @@ class McpMessages {
 	 */
 	private static function set_messages( $session_id, $messages ) {
 		global $wpdb;
-		@ray(
-			array(
-				'set messages' => $session_id,
-				$messages,
-			)
-		);
 
 		$transient_name = self::TRANSIENT_NAME . $session_id;
 		$exists         = $wpdb->get_var(
@@ -120,8 +113,6 @@ class McpMessages {
 
 		global $wpdb;
 
-		@ray( array( 'set message' => $message ) );
-
 		// Expected in the array: sessionId, id, method, params.
 		if ( ! isset( $session_id ) || ! isset( $message['method'] ) ) {
 			// return MCP error.
@@ -151,8 +142,6 @@ class McpMessages {
 				)
 			);
 		}
-
-		@ray( array( 'update transient expiration' => $update ) );
 
 		return self::set_messages( $session_id, $messages );
 	}

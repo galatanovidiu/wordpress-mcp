@@ -15,7 +15,6 @@ class McpHandleInitialize {
 	 * @return void
 	 */
 	public static function handle( $message ) {
-		@ray( array( 'initialize' => $message ) );
 		$id = isset( $message['id'] ) ? $message['id'] : null;
 
 		$result = array(

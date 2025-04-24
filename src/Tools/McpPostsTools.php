@@ -29,7 +29,7 @@ class McpPostsTools {
 			array(
 				'name'           => 'posts_search',
 				'description'    => 'Search and filter posts',
-				'rest_api_alias' => array(
+				'rest_alias' => array(
 					'route'  => '/wp/v2/posts',
 					'method' => 'GET',
 				),
@@ -39,7 +39,7 @@ class McpPostsTools {
 			array(
 				'name'           => 'add_post',
 				'description'    => 'Add a new post',
-				'rest_api_alias' => array(
+				'rest_alias' => array(
 					'route'  => '/wp/v2/posts',
 					'method' => 'POST',
 				),
