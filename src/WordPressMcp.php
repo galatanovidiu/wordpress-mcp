@@ -68,7 +68,6 @@ class WordPressMcp {
 		$this->init_default_resources();
 		$this->init_default_tools();
 		$this->init_features_as_tools();
-		// $this->init_rest_apis_as_tools();
 	}
 
 	/**
@@ -100,12 +99,6 @@ class WordPressMcp {
 		new WpFeatures();
 	}
 
-	/**
-	 * Initialize the REST APIs as tools.
-	 */
-	private function init_rest_apis_as_tools() {
-		new RestApisMcp();
-	}
 	/**
 	 * Get the instance.
 	 *
