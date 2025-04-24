@@ -41,8 +41,8 @@ class RegisterMCPProxyRoutes {
 			'/wpmcp',
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
-				'callback'            => array( $this, 'handleRequest' ),
-				'permission_callback' => array( $this, 'checkPermission' ),
+				'callback'            => array( $this, 'handle_request' ),
+				'permission_callback' => array( $this, 'check_permission' ),
 			)
 		);
 	}
@@ -127,11 +127,24 @@ class RegisterMCPProxyRoutes {
 
 		// @todo: add capabilities based on your implementation
 		$capabilities = array(
-			'tools'     => array(
+			'tools'      => array(
 				'list' => true,
 				'call' => true,
 			),
-			'resources' => array(
+			'resources'  => array(
+				'list' => true,
+			),
+			'prompts'    => array(
+				'list' => true,
+				'get'  => true,
+			),
+			'logging'    => array(
+				'setLevel' => true,
+			),
+			'completion' => array(
+				'complete' => true,
+			),
+			'roots'      => array(
 				'list' => true,
 			),
 		);

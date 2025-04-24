@@ -20,7 +20,6 @@ class McpHandleToolsCall {
 		$tool_name = $message['params']['name'] ?? $message['name'] ?? '';
 		$args      = $message['params']['arguments'] ?? $message['arguments'] ?? array();
 
-
 		// Get the WordPress MCP instance.
 		$wpmcp = WordPressMcp::instance();
 
@@ -65,9 +64,12 @@ class McpHandleToolsCall {
 		// Handle REST API alias if present.
 		if ( isset( $tool_callback['rest_alias'] ) ) {
 			try {
-				$request = new \WP_REST_Request($tool_callback['rest_alias']['method'], $tool_callback['rest_alias']['route'] );
-				$request->set_param( 'name', $tool_name );
-				$request->set_param( 'args', $args );
+				$request = new \WP_REST_Request( $tool_callback['rest_alias']['method'], $tool_callback['rest_alias']['route'] );
+				foreach ( $args as $key => $value ) {
+					$request->set_param( $key, $value );
+				}
+
+				@ray( $request );
 
 				$rest_response = rest_do_request( $request );
 
