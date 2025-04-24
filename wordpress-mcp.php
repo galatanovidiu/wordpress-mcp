@@ -36,8 +36,7 @@ function WPMCP() { // phpcs:ignore
 function init_wordpress_mcp() {
 	$mcp = WPMCP();
 
-	// Initialize the REST routes.
-//	new RegisterMCPRoutes( $mcp ); // SSE Server disabled for now.
+	// Initialize the REST route.
 	new RegisterMCPProxyRoutes($mcp );
 }
 
