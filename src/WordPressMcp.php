@@ -9,15 +9,7 @@ namespace Automattic\WordpressMcp;
 
 use Automattic\WordpressMcp\Tools\McpPostsTools;
 use Automattic\WordpressMcp\Resources\McpSiteInfo;
-use Automattic\WordpressMcp\Utils\McpData;
-use Automattic\WordpressMcp\Mcp\McpHandleInitialize;
-use Automattic\WordpressMcp\Mcp\McpHandleNotificationsInitialized;
-use Automattic\WordpressMcp\Mcp\McpHandleNotificationsCancelled;
-use Automattic\WordpressMcp\Mcp\McpHandleToolsList;
-use Automattic\WordpressMcp\Mcp\McpHandleResourcesList;
-use Automattic\WordpressMcp\Mcp\McpHandleToolsCall;
 use Automattic\WordpressMcp\Tools\McpGetSiteInfo;
-use Automattic\WordpressMcp\Mcp\McpHandlePromptsList;
 /**
  * WordPress MCP
  *
@@ -60,12 +52,6 @@ class WordPressMcp {
 	 */
 	private $namespace = 'wpmcp/v1';
 
-	/**
-	 * The supported methods.
-	 *
-	 * @var array
-	 */
-	private $supported_methods = array();
 
 	/**
 	 * The instance.
@@ -82,17 +68,6 @@ class WordPressMcp {
 		$this->init_default_resources();
 		$this->init_default_tools();
 		$this->init_features_as_tools();
-
-		// Initialize supported methods.
-		$this->supported_methods = array(
-			'initialize'                => array( McpHandleInitialize::class, 'handle' ),
-			'notifications/initialized' => array( McpHandleNotificationsInitialized::class, 'handle' ),
-			'notifications/cancelled'   => array( McpHandleNotificationsCancelled::class, 'handle' ),
-			'tools/list'                => array( McpHandleToolsList::class, 'handle' ),
-			'resources/list'            => array( McpHandleResourcesList::class, 'handle' ),
-			'tools/call'                => array( McpHandleToolsCall::class, 'handle' ),
-			'prompts/list'              => array( McpHandlePromptsList::class, 'handle' ),
-		);
 	}
 
 	/**
@@ -117,6 +92,9 @@ class WordPressMcp {
 		new McpGetSiteInfo();
 	}
 
+	/**
+	 * Initialize the features as tools.
+	 */
 	private function init_features_as_tools() {
 		new WpFeatures();
 	}
@@ -148,7 +126,7 @@ class WordPressMcp {
 		$this->tools_callbacks[ $args['name'] ] = array(
 			'callback'             => $args['callback'],
 			'permissions_callback' => $args['permissions_callback'],
-			'rest_alias'       => $args['rest_alias'] ?? null,
+			'rest_alias'           => $args['rest_alias'] ?? null,
 		);
 
 		unset( $args['callback'] );
@@ -214,15 +192,6 @@ class WordPressMcp {
 	 */
 	public function get_resource_callbacks(): array {
 		return $this->resource_callbacks;
-	}
-
-	/**
-	 * Get the supported methods.
-	 *
-	 * @return array
-	 */
-	public function get_supported_methods(): array {
-		return $this->supported_methods;
 	}
 
 	/**
