@@ -10,6 +10,8 @@ namespace Automattic\WordpressMcp;
 use Automattic\WordpressMcp\Tools\McpPostsTools;
 use Automattic\WordpressMcp\Resources\McpSiteInfo;
 use Automattic\WordpressMcp\Tools\McpGetSiteInfo;
+use Automattic\WordpressMcp\Tools\McpWooOrders;
+use Automattic\WordpressMcp\Tools\McpWooProducts;
 /**
  * WordPress MCP
  *
@@ -90,13 +92,15 @@ class WordPressMcp {
 	private function init_default_tools() {
 		new McpPostsTools();
 		new McpGetSiteInfo();
+		new McpWooProducts();
+		new McpWooOrders();
 	}
 
 	/**
 	 * Initialize the features as tools.
 	 */
 	private function init_features_as_tools() {
-		new WpFeatures();
+		// new WpFeatures();
 	}
 
 	/**
