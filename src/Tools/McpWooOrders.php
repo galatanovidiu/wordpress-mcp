@@ -2,7 +2,7 @@
 
 namespace Automattic\WordpressMcp\Tools;
 
-use Automattic\WordpressMcp\RegisterMCPTool;
+use Automattic\WordpressMcp\RegisterMcpTool;
 
 /**
  * Class McpWooOrders
@@ -31,7 +31,7 @@ class McpWooOrders {
 		}
 
 		// Orders search.
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wc_orders_search',
 				'description' => 'Get a list of WooCommerce orders',
@@ -43,7 +43,7 @@ class McpWooOrders {
 		);
 
 		// Reports tools
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wc_reports_coupons_totals',
 				'description' => 'Get WooCommerce coupons totals report',
@@ -54,7 +54,7 @@ class McpWooOrders {
 			)
 		);
 
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wc_reports_customers_totals',
 				'description' => 'Get WooCommerce customers totals report',
@@ -65,7 +65,7 @@ class McpWooOrders {
 			)
 		);
 
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wc_reports_orders_totals',
 				'description' => 'Get WooCommerce orders totals report',
@@ -76,7 +76,7 @@ class McpWooOrders {
 			)
 		);
 
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wc_reports_products_totals',
 				'description' => 'Get WooCommerce products totals report',
@@ -87,7 +87,7 @@ class McpWooOrders {
 			)
 		);
 
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wc_reports_reviews_totals',
 				'description' => 'Get WooCommerce reviews totals report',
@@ -98,7 +98,7 @@ class McpWooOrders {
 			)
 		);
 
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wc_reports_sales',
 				'description' => 'Get WooCommerce sales report',

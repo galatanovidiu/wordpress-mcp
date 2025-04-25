@@ -5,7 +5,7 @@ namespace Automattic\WordpressMcp;
 /**
  * Register an MCP tool.
  */
-class RegisterMCPTool {
+class RegisterMcpTool {
 
 	/**
 	 * The arguments.

@@ -3,12 +3,12 @@
 namespace Automattic\WordpressMcp;
 
 /**
- * Class WpFeatures
+ * Class WpFeaturesAdapter
  * Exposes WordPress features as MCP tools.
  *
  * @package Automattic\WordpressMcp
  */
-class WpFeatures {
+class WpFeaturesAdapter {
 
 	/**
 	 * Constructor.
@@ -54,7 +54,7 @@ class WpFeatures {
 				};
 			}
 
-			new RegisterMCPTool( $the_feature );
+			new RegisterMcpTool( $the_feature );
 		}
 	}
 }

@@ -2,12 +2,12 @@
 /**
  * Site Info Resource
  *
- * @package WordPressMcp
+ * @package WpMcp
  */
 
 namespace Automattic\WordpressMcp\Resources;
 
-use Automattic\WordpressMcp\RegisterMCPResource;
+use Automattic\WordpressMcp\RegisterMcpResource;
 
 class McpSiteInfo {
 
@@ -26,7 +26,7 @@ class McpSiteInfo {
 	 * @return void
 	 */
 	public function register_resource() {
-		new RegisterMCPResource(
+		new RegisterMcpResource(
 			array(
 				'uri'         => 'WordPress://site-info',
 				'name'        => 'site-info',

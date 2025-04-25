@@ -2,7 +2,7 @@
 /**
  * WordPress MCP
  *
- * @package WordPressMcp
+ * @package WpMcp
  */
 
 namespace Automattic\WordpressMcp;
@@ -15,9 +15,9 @@ use Automattic\WordpressMcp\Tools\McpWooProducts;
 /**
  * WordPress MCP
  *
- * @package WordPressMcp
+ * @package WpMcp
  */
-class WordPressMcp {
+class WpMcp {
 
 	/**
 	 * The tools.
@@ -58,7 +58,7 @@ class WordPressMcp {
 	/**
 	 * The instance.
 	 *
-	 * @var WordPressMcp
+	 * @var WpMcp
 	 */
 	private static $instance = null;
 
@@ -100,15 +100,15 @@ class WordPressMcp {
 	 * Initialize the features as tools.
 	 */
 	private function init_features_as_tools() {
-		// new WpFeatures();
+		// new WpFeaturesAdapter();
 	}
 
 	/**
 	 * Get the instance.
 	 *
-	 * @return WordPressMcp
+	 * @return WpMcp
 	 */
-	public static function instance(): WordPressMcp {
+	public static function instance(): WpMcp {
 		if ( null === self::$instance ) {
 			self::$instance = new self();
 		}

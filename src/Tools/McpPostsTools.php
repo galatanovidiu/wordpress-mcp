@@ -2,12 +2,12 @@
 /**
  * MCP Posts Tools
  *
- * @package WordPressMcp
+ * @package WpMcp
  */
 
 namespace Automattic\WordpressMcp\Tools;
 
-use Automattic\WordpressMcp\RegisterMCPTool;
+use Automattic\WordpressMcp\RegisterMcpTool;
 
 /**
  * Class for managing MCP Posts Tools functionality.
@@ -25,7 +25,7 @@ class McpPostsTools {
 	 * Register the tools.
 	 */
 	public function register_tools() {
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wp_posts_search',
 				'description' => 'Search and filter WordPress posts with pagination',
@@ -36,7 +36,7 @@ class McpPostsTools {
 			)
 		);
 
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wp_get_post',
 				'description' => 'Get a WordPress post by ID',
@@ -47,7 +47,7 @@ class McpPostsTools {
 			)
 		);
 
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wp_add_post',
 				'description' => 'Add a new WordPress post',
@@ -58,7 +58,7 @@ class McpPostsTools {
 			)
 		);
 
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wp_update_post',
 				'description' => 'Update a WordPress post by ID',
@@ -69,7 +69,7 @@ class McpPostsTools {
 			)
 		);
 
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wp_delete_post',
 				'description' => 'Delete a WordPress post by ID',
@@ -81,7 +81,7 @@ class McpPostsTools {
 		);
 
 		// list all categories.
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wp_list_categories',
 				'description' => 'List all WordPress post categories',
@@ -93,7 +93,7 @@ class McpPostsTools {
 		);
 
 		// add new category.
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wp_add_category',
 				'description' => 'Add a new WordPress post category',
@@ -105,7 +105,7 @@ class McpPostsTools {
 		);
 
 		// update category.
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wp_update_category',
 				'description' => 'Update a WordPress post category',
@@ -117,7 +117,7 @@ class McpPostsTools {
 		);
 
 		// delete category.
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wp_delete_category',
 				'description' => 'Delete a WordPress post category',
@@ -129,7 +129,7 @@ class McpPostsTools {
 		);
 
 		// list all tags.
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wp_list_tags',
 				'description' => 'List all WordPress post tags',
@@ -141,7 +141,7 @@ class McpPostsTools {
 		);
 
 		// add new tag.
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wp_add_tag',
 				'description' => 'Add a new WordPress post tag',
@@ -153,7 +153,7 @@ class McpPostsTools {
 		);
 
 		// update tag.
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wp_update_tag',
 				'description' => 'Update a WordPress post tag',
@@ -165,7 +165,7 @@ class McpPostsTools {
 		);
 
 		// delete tag.
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wp_delete_tag',
 				'description' => 'Delete a WordPress post tag',

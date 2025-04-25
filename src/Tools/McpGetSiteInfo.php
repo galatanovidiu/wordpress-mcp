@@ -2,7 +2,7 @@
 
 namespace Automattic\WordpressMcp\Tools;
 
-use Automattic\WordpressMcp\RegisterMCPTool;
+use Automattic\WordpressMcp\RegisterMcpTool;
 use stdClass;
 
 class McpGetSiteInfo {
@@ -12,7 +12,7 @@ class McpGetSiteInfo {
 	}
 
 	public function register_tools() {
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'                 => 'get_site_info',
 				'description'          => 'Get site info',

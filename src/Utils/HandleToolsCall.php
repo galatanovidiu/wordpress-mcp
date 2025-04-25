@@ -1,29 +1,30 @@
 <?php // phpcs:ignore
 
 declare(strict_types=1);
-namespace Automattic\WordpressMcp\Mcp;
+namespace Automattic\WordpressMcp\Utils;
 
-use Automattic\WordpressMcp\WordPressMcp;
+use Automattic\WordpressMcp\WpMcp;
 
 /**
  * Handle Tools Call message.
  */
-class McpHandleToolsCall {
+class HandleToolsCall {
 
 	/**
 	 * Handle tool call request.
 	 *
 	 * @param array $message The message.
+	 *
 	 * @return array
 	 */
-	public static function run( $message ) {
+	public static function run( array $message ): array {
 		$tool_name = $message['params']['name'] ?? $message['name'] ?? '';
 		$args      = $message['params']['arguments'] ?? $message['arguments'] ?? array();
 
 		// Get the WordPress MCP instance.
-		$wpmcp = WordPressMcp::instance();
+		$wpmcp = WpMcp::instance();
 
-		// Get the tools callbacks.
+		// Get the tool callbacks.
 		$tools_callbacks = $wpmcp->get_tools_callbacks();
 
 		// Check if the tool exists.
@@ -48,7 +49,7 @@ class McpHandleToolsCall {
 			$permission_result = call_user_func( $tool_callback['permissions_callback'], $args );
 
 			if ( ! $permission_result ) {
-				$response = array(
+				return array(
 					'jsonrpc' => '2.0',
 					'id'      => $message['id'],
 					'error'   => array(
@@ -56,8 +57,6 @@ class McpHandleToolsCall {
 						'message' => 'Permission denied for tool: ' . $tool_name,
 					),
 				);
-
-				return $response;
 			}
 		}
 
@@ -129,7 +128,12 @@ class McpHandleToolsCall {
 		return $response;
 	}
 
-	public static function handle( $message ) {
+	/**
+	 * Handle tool call request.
+	 *
+	 * @param array $message The message.
+	 */
+	public static function handle( $message ): void {
 		$response = self::run( $message );
 
 		echo "event: message\n";

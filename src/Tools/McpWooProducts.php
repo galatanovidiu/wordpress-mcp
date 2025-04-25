@@ -2,7 +2,7 @@
 
 namespace Automattic\WordpressMcp\Tools;
 
-use Automattic\WordpressMcp\RegisterMCPTool;
+use Automattic\WordpressMcp\RegisterMcpTool;
 
 /**
  * Class McpWooProducts
@@ -31,7 +31,7 @@ class McpWooProducts {
 		}
 
 		// Products.
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wc_products_search',
 				'description' => 'Search and filter WooCommerce products with pagination',
@@ -42,7 +42,7 @@ class McpWooProducts {
 			)
 		);
 
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wc_get_product',
 				'description' => 'Get a WooCommerce product by ID',
@@ -53,7 +53,7 @@ class McpWooProducts {
 			)
 		);
 
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wc_add_product',
 				'description' => 'Add a new WooCommerce product',
@@ -64,7 +64,7 @@ class McpWooProducts {
 			)
 		);
 
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wc_update_product',
 				'description' => 'Update a WooCommerce product by ID',
@@ -75,7 +75,7 @@ class McpWooProducts {
 			)
 		);
 
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wc_delete_product',
 				'description' => 'Delete a WooCommerce product by ID',
@@ -87,7 +87,7 @@ class McpWooProducts {
 		);
 
 		// Product Categories.
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wc_list_product_categories',
 				'description' => 'List all WooCommerce product categories',
@@ -98,7 +98,7 @@ class McpWooProducts {
 			)
 		);
 
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wc_add_product_category',
 				'description' => 'Add a new WooCommerce product category',
@@ -109,7 +109,7 @@ class McpWooProducts {
 			)
 		);
 
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wc_update_product_category',
 				'description' => 'Update a WooCommerce product category',
@@ -120,7 +120,7 @@ class McpWooProducts {
 			)
 		);
 
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wc_delete_product_category',
 				'description' => 'Delete a WooCommerce product category',
@@ -132,7 +132,7 @@ class McpWooProducts {
 		);
 
 		// Product Tags.
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wc_list_product_tags',
 				'description' => 'List all WooCommerce product tags',
@@ -143,7 +143,7 @@ class McpWooProducts {
 			)
 		);
 
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wc_add_product_tag',
 				'description' => 'Add a new WooCommerce product tag',
@@ -154,7 +154,7 @@ class McpWooProducts {
 			)
 		);
 
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wc_update_product_tag',
 				'description' => 'Update a WooCommerce product tag',
@@ -165,7 +165,7 @@ class McpWooProducts {
 			)
 		);
 
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wc_delete_product_tag',
 				'description' => 'Delete a WooCommerce product tag',
@@ -177,7 +177,7 @@ class McpWooProducts {
 		);
 
 		// Product Brands.
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wc_list_product_brands',
 				'description' => 'List all WooCommerce product brands',
@@ -188,7 +188,7 @@ class McpWooProducts {
 			)
 		);
 
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wc_add_product_brand',
 				'description' => 'Add a new WooCommerce product brand',
@@ -199,7 +199,7 @@ class McpWooProducts {
 			)
 		);
 
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wc_update_product_brand',
 				'description' => 'Update a WooCommerce product brand',
@@ -210,7 +210,7 @@ class McpWooProducts {
 			)
 		);
 
-		new RegisterMCPTool(
+		new RegisterMcpTool(
 			array(
 				'name'        => 'wc_delete_product_brand',
 				'description' => 'Delete a WooCommerce product brand',

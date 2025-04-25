@@ -2,7 +2,7 @@
 /**
  * Register MCP Resource
  *
- * @package WordPressMcp
+ * @package WpMcp
  */
 
 namespace Automattic\WordpressMcp;
@@ -10,9 +10,9 @@ namespace Automattic\WordpressMcp;
 /**
  * Register MCP Resource
  *
- * @package WordPressMcp
+ * @package WpMcp
  */
-class RegisterMCPResource {
+class RegisterMcpResource {
 
 	/**
 	 * The arguments.

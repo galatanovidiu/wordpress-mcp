@@ -6,25 +6,25 @@ use WP_REST_Server;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_Error;
-use Automattic\WordpressMcp\Mcp\McpHandleToolsCall;
+use Automattic\WordpressMcp\Utils\HandleToolsCall;
 /**
- * Class RegisterMCPProxyRoutes
+ * Class McpProxyRoutes
  *
  * Registers REST API routes for the Model Context Protocol (MCP) proxy.
  */
-class RegisterMCPProxyRoutes {
+class McpProxyRoutes {
 
 	/**
 	 * The WordPress MCP instance.
 	 *
-	 * @var WordPressMcp
+	 * @var WpMcp
 	 */
-	private WordPressMcp $mcp;
+	private WpMcp $mcp;
 
 	/**
 	 * Initialize the class and register routes
 	 *
-	 * @param WordPressMcp $mcp The WordPress MCP instance.
+	 * @param WpMcp $mcp The WordPress MCP instance.
 	 */
 	public function __construct( $mcp ) {
 		$this->mcp = $mcp;
@@ -193,7 +193,7 @@ class RegisterMCPProxyRoutes {
 		}
 
 		// Implement tool calling logic here.
-		$result = McpHandleToolsCall::run( $params );
+		$result = HandleToolsCall::run( $params );
 
 		return rest_ensure_response(
 			array(
