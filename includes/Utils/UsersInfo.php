@@ -1,9 +1,5 @@
-<?php // phpcs:ignore
-/**
- * User Info Utilities
- *
- * @package WpMcp
- */
+<?php //phpcs:ignore
+declare(strict_types=1);
 
 namespace Automattic\WordpressMcp\Utils;
 

@@ -1,9 +1,5 @@
 <?php //phpcs:ignore
-/**
- * Plugin Information Utility
- *
- * @package Automattic\WordpressMcp\Utils
- */
+declare(strict_types=1);
 
 namespace Automattic\WordpressMcp\Utils;
 

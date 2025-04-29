@@ -9,6 +9,8 @@
  * @package WordPress_MCP_Adapter
  */
 
+declare(strict_types=1);
+
 spl_autoload_register(
 	function ( $class_name ) {
 		// Only handle classes in our namespace.

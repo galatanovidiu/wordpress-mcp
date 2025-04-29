@@ -1,6 +1,6 @@
-<?php // phpcs:ignore
-
+<?php //phpcs:ignore
 declare(strict_types=1);
+
 namespace Automattic\WordpressMcp\Utils;
 
 use Automattic\WordpressMcp\Core\WpMcp;

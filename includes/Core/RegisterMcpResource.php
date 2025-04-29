@@ -1,9 +1,6 @@
 <?php //phpcs:ignore
-/**
- * Register MCP Resource
- *
- * @package WpMcp
- */
+declare(strict_types=1);
+
 
 namespace Automattic\WordpressMcp\Core;
 

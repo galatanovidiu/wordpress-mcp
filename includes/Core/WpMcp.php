@@ -1,9 +1,5 @@
 <?php //phpcs:ignore
-/**
- * WordPress MCP
- *
- * @package WpMcp
- */
+declare(strict_types=1);
 
 namespace Automattic\WordpressMcp\Core;
 

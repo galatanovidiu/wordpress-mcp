@@ -1,9 +1,5 @@
 <?php //phpcs:ignore
-/**
- * MCP Posts Tools
- *
- * @package WpMcp
- */
+declare(strict_types=1);
 
 namespace Automattic\WordpressMcp\Tools;
 

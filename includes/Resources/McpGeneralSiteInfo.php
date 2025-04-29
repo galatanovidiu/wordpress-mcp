@@ -1,9 +1,9 @@
-<?php // phpcs:ignore
-/**
- * Site Info Resource
- *
- * @package WpMcp
- */
+<?php //phpcs:ignore
+declare(strict_types=1);
+* Site Info Resource
+*
+* @package WpMcp
+* /
 
 namespace Automattic\WordpressMcp\Resources;
 

@@ -1,11 +1,4 @@
 <?php //phpcs:ignore
-/**
- * Settings page functionality for WordPress MCP
- *
- * @package WordPress_MCP
- * @subpackage Admin
- */
-
 declare(strict_types=1);
 
 namespace Automattic\WordpressMcp\Admin;
@@ -82,12 +75,16 @@ class Settings {
 		wp_enqueue_style(
 			'wp-components',
 			includes_url( 'css/dist/components/style.css' ),
+			array(),
+			$asset_file['version'],
 		);
 
 		// Enqueue the WordPress MCP settings CSS.
 		wp_enqueue_style(
 			'wp-mcp-settings',
 			WORDPRESS_MCP_URL . 'build/style-index.css',
+			array(),
+			$asset_file['version'],
 		);
 
 		// Localize the script with data needed by the React app.
