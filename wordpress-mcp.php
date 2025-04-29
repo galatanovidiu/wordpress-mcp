@@ -18,7 +18,7 @@ use Automattic\WordpressMcp\Core\WpMcp;
 use Automattic\WordpressMcp\Core\McpProxyRoutes;
 use Automattic\WordpressMcp\Admin\Settings;
 
-define( 'WORDPRESS_MCP_VERSION', '1.0.0' );
+define( 'WORDPRESS_MCP_VERSION', '0.1.6' );
 define( 'WORDPRESS_MCP_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WORDPRESS_MCP_URL', plugin_dir_url( __FILE__ ) );
 

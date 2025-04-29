@@ -1,7 +1,7 @@
 /**
  * WordPress dependencies
  */
-import { useState, useEffect } from '@wordpress/element';
+import { useState, useEffect, useRef } from '@wordpress/element';
 import { Notice, TabPanel } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
@@ -24,6 +24,10 @@ export const SettingsApp = () => {
 	// State for UI
 	const [ isSaving, setIsSaving ] = useState( false );
 	const [ notice, setNotice ] = useState( null );
+	const [ activeTab, setActiveTab ] = useState( 'settings' );
+
+	// Ref for tracking pending save timeouts
+	const saveTimeoutRef = useRef( null );
 
 	// Load settings on component mount
 	useEffect( () => {
@@ -35,16 +39,48 @@ export const SettingsApp = () => {
 		}
 	}, [] );
 
+	// Clean up any pending timeouts on unmount
+	useEffect( () => {
+		return () => {
+			if ( saveTimeoutRef.current ) {
+				clearTimeout( saveTimeoutRef.current );
+			}
+		};
+	}, [] );
+
 	// Handle toggle changes
 	const handleToggleChange = ( key ) => {
-		setSettings( ( prevSettings ) => ( {
-			...prevSettings,
-			[ key ]: ! prevSettings[ key ],
-		} ) );
+		const newValue = ! settings[ key ];
+
+		// Update settings state with the new value
+		setSettings( ( prevSettings ) => {
+			const updatedSettings = {
+				...prevSettings,
+				[ key ]: newValue,
+			};
+
+			// If disabling MCP and currently on a restricted tab, switch to settings tab
+			if ( key === 'enabled' && ! newValue && activeTab !== 'settings' ) {
+				setActiveTab( 'settings' );
+			}
+
+			// Clear any pending save timeout
+			if ( saveTimeoutRef.current ) {
+				clearTimeout( saveTimeoutRef.current );
+			}
+
+			// Automatically save settings after state is updated
+			saveTimeoutRef.current = setTimeout( () => {
+				handleSaveSettingsWithData( updatedSettings );
+				saveTimeoutRef.current = null;
+			}, 500 );
+
+			return updatedSettings;
+		} );
 	};
 
-	// Handle save settings
-	const handleSaveSettings = () => {
+	// Save settings with specific data
+	const handleSaveSettingsWithData = ( settingsData ) => {
 		setIsSaving( true );
 		setNotice( null );
 
@@ -52,7 +88,7 @@ export const SettingsApp = () => {
 		const formData = new FormData();
 		formData.append( 'action', 'wordpress_mcp_save_settings' );
 		formData.append( 'nonce', window.wordpressMcpSettings.nonce );
-		formData.append( 'settings', JSON.stringify( settings ) );
+		formData.append( 'settings', JSON.stringify( settingsData ) );
 
 		// Send AJAX request
 		fetch( ajaxurl, {
@@ -89,6 +125,11 @@ export const SettingsApp = () => {
 			} );
 	};
 
+	// Handle save settings button click
+	const handleSaveSettings = () => {
+		handleSaveSettingsWithData( settings );
+	};
+
 	// Get localized strings
 	const strings = window.wordpressMcpSettings
 		? window.wordpressMcpSettings.strings
@@ -104,16 +145,19 @@ export const SettingsApp = () => {
 			name: 'tools',
 			title: __( 'Tools', 'wordpress-mcp' ),
 			className: 'wordpress-mcp-tools-tab',
+			disabled: ! settings.enabled,
 		},
 		{
 			name: 'resources',
 			title: __( 'Resources', 'wordpress-mcp' ),
 			className: 'wordpress-mcp-resources-tab',
+			disabled: ! settings.enabled,
 		},
 		{
 			name: 'prompts',
 			title: __( 'Prompts', 'wordpress-mcp' ),
 			className: 'wordpress-mcp-prompts-tab',
+			disabled: ! settings.enabled,
 		},
 	];
 
@@ -130,15 +174,46 @@ export const SettingsApp = () => {
 				</Notice>
 			) }
 
-			<TabPanel className="wordpress-mcp-tabs" tabs={ tabs }>
+			<TabPanel
+				className="wordpress-mcp-tabs"
+				tabs={ tabs }
+				activeClass="is-active"
+				initialTabName={ activeTab }
+				onSelect={ ( tabName ) => {
+					const tab = tabs.find( ( t ) => t.name === tabName );
+					if ( ! tab.disabled ) {
+						setActiveTab( tabName );
+						return tabName;
+					}
+					return activeTab;
+				} }
+			>
 				{ ( tab ) => {
+					if ( tab.disabled ) {
+						return (
+							<div className="wordpress-mcp-disabled-tab-notice">
+								<p>
+									{ __(
+										'This feature is only available when MCP functionality is enabled.',
+										'wordpress-mcp'
+									) }
+								</p>
+								<p>
+									{ __(
+										'Please enable MCP in the Settings tab first.',
+										'wordpress-mcp'
+									) }
+								</p>
+							</div>
+						);
+					}
+
 					switch ( tab.name ) {
 						case 'settings':
 							return (
 								<SettingsTab
 									settings={ settings }
 									onToggleChange={ handleToggleChange }
-									onSaveSettings={ handleSaveSettings }
 									isSaving={ isSaving }
 									strings={ strings }
 								/>

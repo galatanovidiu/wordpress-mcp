@@ -45,6 +45,28 @@
 	margin-bottom: 20px;
 }
 
+.wordpress-mcp-settings .settings-saving-indicator {
+	display: flex;
+	align-items: center;
+	color: #3858e9; /* WordPress primary blue color */
+	font-style: italic;
+	font-size: 14px;
+	padding: 4px 8px;
+	border-radius: 4px;
+	background-color: rgba(56, 88, 233, 0.05);
+	animation: fade-in 0.3s ease-in-out;
+	justify-content: flex-end;
+}
+
+@keyframes fade-in {
+	0% { opacity: 0; }
+	100% { opacity: 1; }
+}
+
+.wordpress-mcp-settings .settings-saving-indicator .components-spinner {
+	margin-right: 10px;
+}
+
 /* Table Styles */
 .wordpress-mcp-table {
 	width: 100%;
@@ -88,4 +110,31 @@
 .wordpress-mcp-tabs .components-tab-panel__tabs {
 	margin-bottom: 5px;
 	margin-left: 5px;
+}
+
+/* Disabled Tabs */
+.wordpress-mcp-tabs .components-tab-panel__tabs-item[disabled],
+.wordpress-mcp-tabs .components-tab-panel__tabs-item[aria-disabled="true"] {
+	opacity: 0.6;
+	cursor: not-allowed;
+	pointer-events: none;
+}
+
+.wordpress-mcp-disabled-tab-notice {
+	padding: 24px;
+	background-color: #f8f9fa;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	text-align: center;
+	margin-top: 20px;
+}
+
+.wordpress-mcp-disabled-tab-notice p {
+	font-size: 14px;
+	color: #757575;
+	margin: 0 0 10px 0;
+}
+
+.wordpress-mcp-disabled-tab-notice p:last-child {
+	margin-bottom: 0;
 }

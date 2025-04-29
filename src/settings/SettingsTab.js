@@ -7,7 +7,6 @@ import {
 	CardBody,
 	CardFooter,
 	ToggleControl,
-	Button,
 	Spinner,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
@@ -15,13 +14,7 @@ import { __ } from '@wordpress/i18n';
 /**
  * Settings Tab Component
  */
-const SettingsTab = ( {
-	settings,
-	onToggleChange,
-	onSaveSettings,
-	isSaving,
-	strings,
-} ) => {
+const SettingsTab = ( { settings, onToggleChange, isSaving, strings } ) => {
 	return (
 		<Card>
 			<CardHeader>
@@ -70,25 +63,14 @@ const SettingsTab = ( {
 					/>
 				</div>
 			</CardBody>
-			<CardFooter>
-				<Button
-					variant="primary"
-					onClick={ onSaveSettings }
-					isBusy={ isSaving }
-					disabled={ isSaving }
-					className="button button-primary"
-				>
-					{ isSaving ? (
-						<>
-							<Spinner />
-							{ __( 'Saving...', 'wordpress-mcp' ) }
-						</>
-					) : (
-						strings.saveSettings ||
-						__( 'Save Settings', 'wordpress-mcp' )
-					) }
-				</Button>
-			</CardFooter>
+			{ isSaving && (
+				<CardFooter>
+					<div className="settings-saving-indicator">
+						<Spinner />
+						{ __( 'Saving...', 'wordpress-mcp' ) }
+					</div>
+				</CardFooter>
+			) }
 		</Card>
 	);
 };
