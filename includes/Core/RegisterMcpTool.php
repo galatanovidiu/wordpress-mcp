@@ -1,6 +1,8 @@
 <?php // phpcs:ignore
 
-namespace Automattic\WordpressMcp;
+namespace Automattic\WordpressMcp\Core;
+
+use InvalidArgumentException;
 
 /**
  * Register an MCP tool.
@@ -18,7 +20,7 @@ class RegisterMcpTool {
 	 * Constructor.
 	 *
 	 * @param array $args The arguments to register the MCP tool.
-	 * @throws \InvalidArgumentException When the arguments are invalid.
+	 * @throws InvalidArgumentException When the arguments are invalid.
 	 */
 	public function __construct( array $args ) {
 		$this->args = $args;
@@ -48,13 +50,13 @@ class RegisterMcpTool {
 		$method = $this->args['rest_alias']['method'];
 		$route  = $this->args['rest_alias']['route'];
 
-		// get a lsit of all registered rest routes.
+		// get a list of all registered rest routes.
 		$routes = rest_get_server()->get_routes();
 		// maybe use:  rest_get_server()->get_route_options( $route ) );
 		$rest_route = $routes[ $route ] ?? null;
 		if ( ! $rest_route ) {
 			// translators: %s: Route.
-			throw new \InvalidArgumentException( sprintf( esc_html__( 'The route %s does not exist.', 'wordpress-mcp' ), esc_html( $route ) ) );
+			throw new InvalidArgumentException( sprintf( esc_html__( 'The route %s does not exist.', 'wordpress-mcp' ), esc_html( $route ) ) );
 		}
 
 		$rest_api = null;
@@ -67,7 +69,7 @@ class RegisterMcpTool {
 			}
 		}
 		if ( ! $rest_api ) {
-			throw new \InvalidArgumentException( esc_html__( 'The method does not exist.', 'wordpress-mcp' ) );
+			throw new InvalidArgumentException( esc_html__( 'The method does not exist.', 'wordpress-mcp' ) );
 		}
 
 		// Convert REST API args to MCP input schema.
@@ -130,22 +132,22 @@ class RegisterMcpTool {
 	 * Validate the arguments.
 	 *
 	 * @return void
-	 * @throws \InvalidArgumentException When the arguments are invalid.
+	 * @throws InvalidArgumentException When the arguments are invalid.
 	 */
 	private function validate_arguments(): void {
 		// name is required.
 		if ( ! isset( $this->args['name'] ) ) {
-			throw new \InvalidArgumentException( 'The name is required.' );
+			throw new InvalidArgumentException( 'The name is required.' );
 		}
 
 		// validate the name: must be a string and between 1 and 64 characters.
 		if ( ! preg_match( '/^[a-zA-Z0-9_-]{1,64}$/', $this->args['name'] ) ) {
-			throw new \InvalidArgumentException( 'The name must be a string between 1 and 64 characters.' );
+			throw new InvalidArgumentException( 'The name must be a string between 1 and 64 characters.' );
 		}
 
 		// description is required.
 		if ( ! isset( $this->args['description'] ) ) {
-			throw new \InvalidArgumentException( 'The description is required.' );
+			throw new InvalidArgumentException( 'The description is required.' );
 		}
 
 		// if rest_alias is provided, the rest of the arguments are not required.
@@ -156,17 +158,17 @@ class RegisterMcpTool {
 
 		// callback is required.
 		if ( ! isset( $this->args['callback'] ) ) {
-			throw new \InvalidArgumentException( 'The callback is required.' );
+			throw new InvalidArgumentException( 'The callback is required.' );
 		}
 
-		// callback must be a callable.
+		// callback must be callable.
 		if ( ! is_callable( $this->args['callback'] ) ) {
-			throw new \InvalidArgumentException( 'The callback must be a callable.' );
+			throw new InvalidArgumentException( 'The callback must be a callable.' );
 		}
 
-		// permissions_callback must be a callable.
+		// permissions_callback must be callable.
 		if ( isset( $this->args['permissions_callback'] ) && ! is_callable( $this->args['permissions_callback'] ) ) {
-			throw new \InvalidArgumentException( 'The permissions callback must be a callable.' );
+			throw new InvalidArgumentException( 'The permissions callback must be a callable.' );
 		}
 
 		// validate the input schema.
@@ -177,22 +179,22 @@ class RegisterMcpTool {
 	 * Validate the rest api alias.
 	 *
 	 * @return void
-	 * @throws \InvalidArgumentException When the rest api alias is invalid.
+	 * @throws InvalidArgumentException When the rest api alias is invalid.
 	 */
 	private function validate_rest_alias(): void {
 		// route is required.
 		if ( ! isset( $this->args['rest_alias']['route'] ) ) {
-			throw new \InvalidArgumentException( 'The route is required.' );
+			throw new InvalidArgumentException( 'The route is required.' );
 		}
 
 		// method is required.
 		if ( ! isset( $this->args['rest_alias']['method'] ) ) {
-			throw new \InvalidArgumentException( 'The method is required.' );
+			throw new InvalidArgumentException( 'The method is required.' );
 		}
 
 		// validate the method: must be one of the following: GET, POST, PUT, PATCH, DELETE.
 		if ( ! in_array( $this->args['rest_alias']['method'], array( 'GET', 'POST', 'PUT', 'PATCH', 'DELETE' ), true ) ) {
-			throw new \InvalidArgumentException( 'The method must be one of the following: GET, POST, PUT, PATCH, DELETE.' );
+			throw new InvalidArgumentException( 'The method must be one of the following: GET, POST, PUT, PATCH, DELETE.' );
 		}
 	}
 
@@ -200,21 +202,21 @@ class RegisterMcpTool {
 	 * Validate the input schema.
 	 *
 	 * @return void
-	 * @throws \InvalidArgumentException When the input schema is invalid.
+	 * @throws InvalidArgumentException When the input schema is invalid.
 	 */
 	private function validate_input_schema(): void {
-		// Check if input schema is provided.
+		// Check if the input schema is provided.
 		if ( empty( $this->args['inputSchema'] ) ) {
-			throw new \InvalidArgumentException( 'The input schema is required.' );
+			throw new InvalidArgumentException( 'The input schema is required.' );
 		}
 
-		// Validate that input schema is a valid JSON Schema object.
+		// Validate that the input schema is a valid JSON Schema object.
 		if ( ! isset( $this->args['inputSchema']['type'] ) || 'object' !== $this->args['inputSchema']['type'] ) {
-			throw new \InvalidArgumentException( esc_html__( 'The input schema must be an object type.', 'wordpress-mcp' ) );
+			throw new InvalidArgumentException( esc_html__( 'The input schema must be an object type.', 'wordpress-mcp' ) );
 		}
 
 		// Validate properties field exists and is an object.
-		// if ( ! isset( $this->args['inputSchema']['properties'] ) || ! is_array($this->args['inputSchema']['properties'] ) ) {
+		// If ( ! isset( $this->args['inputSchema']['properties'] ) || ! is_array($this->args['inputSchema']['properties'] ) ) {
 		// throw new \InvalidArgumentException( esc_html__( 'The input schema must have a properties field that is an object.', 'wordpress-mcp' ) );
 		// }
 
@@ -222,24 +224,24 @@ class RegisterMcpTool {
 		foreach ( $this->args['inputSchema']['properties'] as $property_name => $property ) {
 			if ( ! isset( $property['type'] ) ) {
 				// translators: %s: Property name.
-				throw new \InvalidArgumentException( sprintf( esc_html__( "Property '%s' must have a type field.", 'wordpress-mcp' ), esc_html( $property_name ) ) );
+				throw new InvalidArgumentException( sprintf( esc_html__( "Property '%s' must have a type field.", 'wordpress-mcp' ), esc_html( $property_name ) ) );
 			}
 
-			// Validate property type is valid JSON Schema type.
+			// Validate property type is a valid JSON Schema type.
 			$valid_types = array( 'string', 'number', 'integer', 'boolean', 'array', 'object', 'null' );
 			if ( ! in_array( $property['type'], $valid_types, true ) ) {
 				// translators: 1: Property name, 2: Property type.
-				throw new \InvalidArgumentException( sprintf( esc_html__( "Property '%1\$s' has invalid type '%2\$s'.", 'wordpress-mcp' ), esc_html( $property_name ), esc_html( $property['type'] ) ) );
+				throw new InvalidArgumentException( sprintf( esc_html__( "Property '%1\$s' has invalid type '%2\$s'.", 'wordpress-mcp' ), esc_html( $property_name ), esc_html( $property['type'] ) ) );
 			}
 
-			// If type is array, validate items field exists.
+			// If the type is array, the validate items field exists.
 			if ( 'array' === $property['type'] && ! isset( $property['items'] ) ) {
 				// translators: %s: Property name.
-				throw new \InvalidArgumentException( sprintf( esc_html__( "Array property '%s' must have an items field.", 'wordpress-mcp' ), esc_html( $property_name ) ) );
+				throw new InvalidArgumentException( sprintf( esc_html__( "Array property '%s' must have an items field.", 'wordpress-mcp' ), esc_html( $property_name ) ) );
 			}
 		}
 
-		// Validate required field if present.
+		// Validate the required field if present.
 		if ( isset( $this->args['inputSchema']['required'] ) ) {
 			// if ( ! is_array( $this->args['inputSchema']['required'] ) ) {
 			// throw new \InvalidArgumentException( esc_html__( 'The required field must be an array.', 'wordpress-mcp' ) );
@@ -248,8 +250,8 @@ class RegisterMcpTool {
 			// Check all required properties exist in properties.
 			foreach ( $this->args['inputSchema']['required'] as $required_property ) {
 				if ( ! isset( $this->args['inputSchema']['properties'][ $required_property ] ) ) {
-					// translators: %s: Required property name.
-					throw new \InvalidArgumentException( sprintf( esc_html__( "Required property '%s' is not defined in properties.", 'wordpress-mcp' ), esc_html( $required_property ) ) );
+					// translators: %s: Required property.
+					throw new InvalidArgumentException( sprintf( esc_html__( "Required property '%s' does not exist in properties.", 'wordpress-mcp' ), esc_html( $required_property ) ) );
 				}
 			}
 		}

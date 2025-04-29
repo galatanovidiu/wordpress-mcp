@@ -12,7 +12,7 @@
 spl_autoload_register(
 	function ( $class_name ) {
 		// Only handle classes in our namespace.
-		if ( strpos( $class_name, 'Automattic\\WordpressMcp\\' ) !== 0 ) {
+		if ( ! str_starts_with( $class_name, 'Automattic\\WordpressMcp\\' ) ) {
 			return;
 		}
 
@@ -20,7 +20,7 @@ spl_autoload_register(
 		$relative_class = substr( $class_name, strlen( 'Automattic\\WordpressMcp\\' ) );
 
 		// Convert namespace separators to directory separators.
-		$file = WORDPRESS_MCP_PATH . '/src/' . str_replace( '\\', '/', $relative_class ) . '.php';
+		$file = WORDPRESS_MCP_PATH . '/includes/' . str_replace( '\\', '/', $relative_class ) . '.php';
 
 		// If the file exists, require it.
 		if ( file_exists( $file ) ) {

@@ -7,7 +7,7 @@
 
 namespace Automattic\WordpressMcp\Tools;
 
-use Automattic\WordpressMcp\RegisterMcpTool;
+use Automattic\WordpressMcp\Core\RegisterMcpTool;
 
 /**
  * Class for managing MCP Posts Tools functionality.
@@ -24,7 +24,7 @@ class McpPostsTools {
 	/**
 	 * Register the tools.
 	 */
-	public function register_tools() {
+	public function register_tools(): void {
 		new RegisterMcpTool(
 			array(
 				'name'        => 'wp_posts_search',
@@ -92,7 +92,7 @@ class McpPostsTools {
 			)
 		);
 
-		// add new category.
+		// add a new category.
 		new RegisterMcpTool(
 			array(
 				'name'        => 'wp_add_category',

@@ -1,12 +1,14 @@
 <?php //phpcs:ignore
 
-namespace Automattic\WordpressMcp;
+namespace Automattic\WordpressMcp\Core;
 
 use WP_REST_Server;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_Error;
 use Automattic\WordpressMcp\Utils\HandleToolsCall;
+use Automattic\WordpressMcp\Utils\HandlePromptGet;
+
 /**
  * Class McpProxyRoutes
  *
@@ -26,7 +28,7 @@ class McpProxyRoutes {
 	 *
 	 * @param WpMcp $mcp The WordPress MCP instance.
 	 */
-	public function __construct( $mcp ) {
+	public function __construct( WpMcp $mcp ) {
 		$this->mcp = $mcp;
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
 	}
@@ -34,7 +36,17 @@ class McpProxyRoutes {
 	/**
 	 * Register all MCP proxy routes
 	 */
-	public function register_routes() {
+	public function register_routes(): void {
+
+		// Check if MCP is enabled in settings.
+		$options = get_option( 'wordpress_mcp_settings', array() );
+		$enabled = isset( $options['enabled'] ) && $options['enabled'];
+
+		// If MCP is disabled, don't register routes.
+		if ( ! $enabled ) {
+			return;
+		}
+
 		// Single endpoint for all MCP operations.
 		register_rest_route(
 			'wp/v2',
@@ -52,7 +64,20 @@ class McpProxyRoutes {
 	 *
 	 * @return bool|WP_Error
 	 */
-	public function check_permission() {
+	public function check_permission(): WP_Error|bool {
+		// Check if MCP is enabled in settings.
+		$options = get_option( 'wordpress_mcp_settings', array() );
+		$enabled = isset( $options['enabled'] ) && $options['enabled'];
+
+		// If MCP is disabled, deny access.
+		if ( ! $enabled ) {
+			return new WP_Error(
+				'mcp_disabled',
+				'MCP functionality is currently disabled.',
+				array( 'status' => 403 )
+			);
+		}
+
 		return current_user_can( 'manage_options' );
 	}
 
@@ -60,9 +85,10 @@ class McpProxyRoutes {
 	 * Handle all MCP requests
 	 *
 	 * @param WP_REST_Request $request The request.
+	 *
 	 * @return WP_REST_Response|WP_Error
 	 */
-	public function handle_request( $request ) {
+	public function handle_request( WP_REST_Request $request ): WP_Error|WP_REST_Response {
 		$params = $request->get_json_params();
 
 		if ( empty( $params ) || ! isset( $params['method'] ) ) {
@@ -76,49 +102,36 @@ class McpProxyRoutes {
 		$method = $params['method'];
 
 		// Route the request to the appropriate handler based on the method.
-		switch ( $method ) {
-			case 'init':
-				return $this->init( $params );
-			case 'tools/list':
-				return $this->list_tools( $params );
-			case 'tools/call':
-				return $this->call_tool( $params );
-			case 'resources/list':
-				return $this->list_resources( $params );
-			case 'resources/templates/list':
-				return $this->list_resource_templates( $params );
-			case 'resources/read':
-				return $this->read_resource( $params );
-			case 'resources/subscribe':
-				return $this->subscribe_resource( $params );
-			case 'resources/unsubscribe':
-				return $this->unsubscribe_resource( $params );
-			case 'prompts/list':
-				return $this->list_prompts( $params );
-			case 'prompts/get':
-				return $this->get_prompt( $params );
-			case 'logging/setLevel':
-				return $this->set_logging_level( $params );
-			case 'completion/complete':
-				return $this->complete( $params );
-			case 'roots/list':
-				return $this->list_roots( $params );
-			default:
-				return new WP_Error(
-					'invalid_method',
-					'Invalid method: ' . $method,
-					array( 'status' => 400 )
-				);
-		}
+		return match ( $method ) {
+			'init' => $this->init( $params ),
+			'tools/list' => $this->list_tools( $params ),
+			'tools/call' => $this->call_tool( $params ),
+			'resources/list' => $this->list_resources( $params ),
+			'resources/templates/list' => $this->list_resource_templates( $params ),
+			'resources/read' => $this->read_resource( $params ),
+			'resources/subscribe' => $this->subscribe_resource( $params ),
+			'resources/unsubscribe' => $this->unsubscribe_resource( $params ),
+			'prompts/list' => $this->list_prompts( $params ),
+			'prompts/get' => $this->get_prompt( $params ),
+			'logging/setLevel' => $this->set_logging_level( $params ),
+			'completion/complete' => $this->complete( $params ),
+			'roots/list' => $this->list_roots( $params ),
+			default => new WP_Error(
+				'invalid_method',
+				'Invalid method: ' . $method,
+				array( 'status' => 400 )
+			),
+		};
 	}
 
 	/**
 	 * Initialize the MCP server
 	 *
 	 * @param array $params Request parameters.
+	 *
 	 * @return WP_REST_Response|WP_Error
 	 */
-	public function init( $params ) {
+	public function init( array $params ): WP_Error|WP_REST_Response {
 		// @todo: the name should be editable from the admin page
 		$server_info = array(
 			'name'    => 'WordPress MCP Server',
@@ -161,10 +174,10 @@ class McpProxyRoutes {
 	 * List available tools
 	 *
 	 * @param array $params Request parameters.
+	 *
 	 * @return WP_REST_Response|WP_Error
 	 */
-	public function list_tools( $params ) {
-		$cursor = isset( $params['cursor'] ) ? $params['cursor'] : null;
+	public function list_tools( array $params ): WP_Error|WP_REST_Response {
 
 		// Implement tool listing logic here.
 		$tools = $this->mcp->get_tools();
@@ -181,9 +194,10 @@ class McpProxyRoutes {
 	 * Call a tool
 	 *
 	 * @param array $params Request parameters.
+	 *
 	 * @return WP_REST_Response|WP_Error
 	 */
-	public function call_tool( $params ) {
+	public function call_tool( array $params ): WP_Error|WP_REST_Response {
 		if ( ! isset( $params['name'] ) ) {
 			return new WP_Error(
 				'missing_parameter',
@@ -192,7 +206,7 @@ class McpProxyRoutes {
 			);
 		}
 
-		// Implement tool calling logic here.
+		// Implement a tool calling logic here.
 		$result = HandleToolsCall::run( $params );
 
 		return rest_ensure_response(
@@ -211,13 +225,13 @@ class McpProxyRoutes {
 	 * List resources
 	 *
 	 * @param array $params Request parameters.
+	 *
 	 * @return WP_REST_Response|WP_Error
 	 */
-	public function list_resources( $params ) {
-		$cursor = isset( $params['cursor'] ) ? $params['cursor'] : null;
+	public function list_resources( array $params ): WP_Error|WP_REST_Response {
 
-		// Implement resource listing logic here.
-		$resources = array();
+		// Get the registered resources from the MCP instance.
+		$resources = array_values( $this->mcp->get_resources() );
 
 		return rest_ensure_response(
 			array(
@@ -231,10 +245,10 @@ class McpProxyRoutes {
 	 * List resource templates
 	 *
 	 * @param array $params Request parameters.
+	 *
 	 * @return WP_REST_Response|WP_Error
 	 */
-	public function list_resource_templates( $params ) {
-		$cursor = isset( $params['cursor'] ) ? $params['cursor'] : null;
+	public function list_resource_templates( array $params ): WP_Error|WP_REST_Response {
 
 		// Implement resource template listing logic here.
 		$templates = array();
@@ -251,9 +265,10 @@ class McpProxyRoutes {
 	 * Read a resource
 	 *
 	 * @param array $params Request parameters.
+	 *
 	 * @return WP_REST_Response|WP_Error
 	 */
-	public function read_resource( $params ) {
+	public function read_resource( array $params ): WP_Error|WP_REST_Response {
 		if ( ! isset( $params['uri'] ) ) {
 			return new WP_Error(
 				'missing_parameter',
@@ -262,13 +277,32 @@ class McpProxyRoutes {
 			);
 		}
 
-		$uri = $params['uri'];
-
 		// Implement resource reading logic here.
+		$uri                = $params['uri'];
+		$resource_callbacks = $this->mcp->get_resource_callbacks();
+
+		if ( ! isset( $resource_callbacks[ $uri ] ) ) {
+			return new WP_Error(
+				'resource_not_found',
+				'Resource not found: ' . $uri,
+				array( 'status' => 404 )
+			);
+		}
+
+		$callback = $resource_callbacks[ $uri ];
+		$content  = call_user_func( $callback, $params );
+
+		$resource = $this->mcp->get_resources()[ $uri ];
 
 		return rest_ensure_response(
 			array(
-				'content' => null,
+				'contents' => array(
+					array(
+						'uri'      => $uri,
+						'mimeType' => $resource['mimeType'],
+						'text'     => wp_json_encode( $content ),
+					),
+				),
 			)
 		);
 	}
@@ -277,9 +311,10 @@ class McpProxyRoutes {
 	 * Subscribe to a resource
 	 *
 	 * @param array $params Request parameters.
+	 *
 	 * @return WP_REST_Response|WP_Error
 	 */
-	public function subscribe_resource( $params ) {
+	public function subscribe_resource( array $params ): WP_Error|WP_REST_Response {
 		if ( ! isset( $params['uri'] ) ) {
 			return new WP_Error(
 				'missing_parameter',
@@ -288,13 +323,12 @@ class McpProxyRoutes {
 			);
 		}
 
-		$uri = $params['uri'];
-
 		// Implement resource subscription logic here.
+		$uri = $params['uri'];
 
 		return rest_ensure_response(
 			array(
-				'subscriptionId' => null,
+				'subscriptionId' => 'sub_' . md5( $uri ),
 			)
 		);
 	}
@@ -303,20 +337,19 @@ class McpProxyRoutes {
 	 * Unsubscribe from a resource
 	 *
 	 * @param array $params Request parameters.
+	 *
 	 * @return WP_REST_Response|WP_Error
 	 */
-	public function unsubscribe_resource( $params ) {
-		if ( ! isset( $params['uri'] ) ) {
+	public function unsubscribe_resource( array $params ): WP_Error|WP_REST_Response {
+		if ( ! isset( $params['subscriptionId'] ) ) {
 			return new WP_Error(
 				'missing_parameter',
-				'Missing required parameter: uri',
+				'Missing required parameter: subscriptionId',
 				array( 'status' => 400 )
 			);
 		}
 
-		$uri = $params['uri'];
-
-		// Implement resource unsubscription logic here.
+		// @todo: Implement resource unsubscription logic here.
 
 		return rest_ensure_response(
 			array(
@@ -326,21 +359,16 @@ class McpProxyRoutes {
 	}
 
 	/**
-	 * List prompts
+	 * List prompt.
 	 *
-	 * @param array $params Request parameters.
+	 * @param array $params
+	 *
 	 * @return WP_REST_Response|WP_Error
 	 */
-	public function list_prompts( $params ) {
-		$cursor = isset( $params['cursor'] ) ? $params['cursor'] : null;
-
-		// Implement prompt listing logic here.
-		$prompts = array();
-
+	public function list_prompts( array $params ): WP_Error|WP_REST_Response {
 		return rest_ensure_response(
 			array(
-				'prompts'    => $prompts,
-				'nextCursor' => '',
+				'prompts' => array_values( $this->mcp->get_prompts() ),
 			)
 		);
 	}
@@ -349,9 +377,10 @@ class McpProxyRoutes {
 	 * Get a prompt
 	 *
 	 * @param array $params Request parameters.
+	 *
 	 * @return WP_REST_Response|WP_Error
 	 */
-	public function get_prompt( $params ) {
+	public function get_prompt( array $params ): WP_Error|WP_REST_Response {
 		if ( ! isset( $params['name'] ) ) {
 			return new WP_Error(
 				'missing_parameter',
@@ -360,25 +389,35 @@ class McpProxyRoutes {
 			);
 		}
 
-		$name      = $params['name'];
-		$arguments = isset( $params['arguments'] ) ? $params['arguments'] : array();
+		// Get the prompt by name.
+		$prompt_name = $params['name'];
+		$prompt      = $this->mcp->get_prompt_by_name( $prompt_name );
 
-		// Implement prompt retrieval logic here.
+		if ( ! $prompt ) {
+			return new WP_Error(
+				'prompt_not_found',
+				'Prompt not found: ' . $prompt_name,
+				array( 'status' => 404 )
+			);
+		}
+
+		// Get the arguments for the prompt.
+		$arguments = $params['arguments'] ?? array();
+		$messages  = $this->mcp->get_prompt_messages( $prompt_name );
 
 		return rest_ensure_response(
-			array(
-				'prompt' => null,
-			)
+			HandlePromptGet::run( $prompt, $messages, $arguments )
 		);
 	}
 
 	/**
-	 * Set logging level
+	 * Set the logging level
 	 *
 	 * @param array $params Request parameters.
+	 *
 	 * @return WP_REST_Response|WP_Error
 	 */
-	public function set_logging_level( $params ) {
+	public function set_logging_level( array $params ): WP_Error|WP_REST_Response {
 		if ( ! isset( $params['level'] ) ) {
 			return new WP_Error(
 				'missing_parameter',
@@ -387,9 +426,7 @@ class McpProxyRoutes {
 			);
 		}
 
-		$level = $params['level'];
-
-		// Implement logging level setting logic here.
+		// @todo: Implement logging level setting logic here.
 
 		return rest_ensure_response(
 			array(
@@ -402,25 +439,15 @@ class McpProxyRoutes {
 	 * Complete a request
 	 *
 	 * @param array $params Request parameters.
+	 *
 	 * @return WP_REST_Response|WP_Error
 	 */
-	public function complete( $params ) {
-		if ( ! isset( $params['ref'] ) ) {
-			return new WP_Error(
-				'missing_parameter',
-				'Missing required parameter: ref',
-				array( 'status' => 400 )
-			);
-		}
-
-		$ref      = $params['ref'];
-		$argument = isset( $params['argument'] ) ? $params['argument'] : null;
-
+	public function complete( array $params ): WP_Error|WP_REST_Response {
 		// Implement completion logic here.
 
 		return rest_ensure_response(
 			array(
-				'result' => null,
+				'success' => true,
 			)
 		);
 	}
@@ -429,9 +456,10 @@ class McpProxyRoutes {
 	 * List roots
 	 *
 	 * @param array $params Request parameters.
+	 *
 	 * @return WP_REST_Response|WP_Error
 	 */
-	public function list_roots( $params ) {
+	public function list_roots( array $params ): WP_Error|WP_REST_Response {
 		// Implement roots listing logic here.
 		$roots = array();
 

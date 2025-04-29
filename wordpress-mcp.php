@@ -3,24 +3,26 @@
  * Plugin name: WordPress MCP
  * Description: A plugin to manage content on a WordPress site.
  * Version: 1.0.5
- * Author: Automatic
- * Author URI: https://automatic.com
+ * Author: Ovidiu Galatan <ovidiu.galatan@a8c.com>
+ * Author URI: https://automattic.com
  * Text Domain: wordpress-mcp
  * Domain Path: /languages
+ * Requires PHP: 8.0
  *
  * @package WordPress MCP
  */
 
 declare(strict_types=1);
 
-use Automattic\WordpressMcp\WpMcp;
-use Automattic\WordpressMcp\McpProxyRoutes;
+use Automattic\WordpressMcp\Core\WpMcp;
+use Automattic\WordpressMcp\Core\McpProxyRoutes;
 use Automattic\WordpressMcp\Admin\Settings;
 
 define( 'WORDPRESS_MCP_VERSION', '1.0.0' );
 define( 'WORDPRESS_MCP_PATH', plugin_dir_path( __FILE__ ) );
+define( 'WORDPRESS_MCP_URL', plugin_dir_url( __FILE__ ) );
 
-require_once WORDPRESS_MCP_PATH . '/src/autoload.php';
+require_once WORDPRESS_MCP_PATH . 'includes/autoload.php';
 
 /**
  * Get the WordPress MCP instance.

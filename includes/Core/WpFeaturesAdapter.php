@@ -1,6 +1,6 @@
 <?php // phpcs:ignore
 
-namespace Automattic\WordpressMcp;
+namespace Automattic\WordpressMcp\Core;
 
 /**
  * Class WpFeaturesAdapter
@@ -20,7 +20,7 @@ class WpFeaturesAdapter {
 	/**
 	 * Initializes the feature registry.
 	 */
-	public function init() {
+	public function init(): void {
 		if ( ! function_exists( 'wp_feature_registry' ) ) {
 			return;
 		}

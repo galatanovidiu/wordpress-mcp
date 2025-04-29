@@ -2,7 +2,7 @@
 
 namespace Automattic\WordpressMcp\Tools;
 
-use Automattic\WordpressMcp\RegisterMcpTool;
+use Automattic\WordpressMcp\Core\RegisterMcpTool;
 
 /**
  * Class McpWooOrders
@@ -24,7 +24,7 @@ class McpWooOrders {
 	 *
 	 * @return void
 	 */
-	public function register_tools() {
+	public function register_tools(): void {
 		// Only register tools if WooCommerce is active.
 		if ( ! $this->is_woocommerce_active() ) {
 			return;
@@ -115,7 +115,7 @@ class McpWooOrders {
 	 *
 	 * @return bool True if WooCommerce is active, false otherwise.
 	 */
-	private function is_woocommerce_active() {
+	private function is_woocommerce_active(): bool {
 		return class_exists( 'WooCommerce' );
 	}
 }

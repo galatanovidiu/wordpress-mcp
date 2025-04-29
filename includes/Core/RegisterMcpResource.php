@@ -5,7 +5,9 @@
  * @package WpMcp
  */
 
-namespace Automattic\WordpressMcp;
+namespace Automattic\WordpressMcp\Core;
+
+use InvalidArgumentException;
 
 /**
  * Register MCP Resource
@@ -61,27 +63,27 @@ class RegisterMcpResource {
 	/**
 	 * Validate the arguments.
 	 *
-	 * @throws \InvalidArgumentException When validation fails.
+	 * @throws InvalidArgumentException When validation fails.
 	 * @return void
 	 */
 	private function validate_arguments(): void {
 		if ( ! isset( $this->args['uri'] ) || empty( $this->args['uri'] ) ) {
-			throw new \InvalidArgumentException( 'Resource URI is required' );
+			throw new InvalidArgumentException( 'Resource URI is required' );
 		}
 
 		if ( ! isset( $this->args['name'] ) || empty( $this->args['name'] ) ) {
-			throw new \InvalidArgumentException( 'Resource name is required' );
+			throw new InvalidArgumentException( 'Resource name is required' );
 		}
 
 		// Validate URI format.
 		if ( ! filter_var( $this->args['uri'], FILTER_VALIDATE_URL ) && ! preg_match( '/^WordPress:\/\//', $this->args['uri'] ) ) {
-			throw new \InvalidArgumentException( 'Invalid resource URI format. Must follow WordPress://[host]/[path] format' );
+			throw new InvalidArgumentException( 'Invalid resource URI format. Must follow WordPress://[host]/[path] format' );
 		}
 
-		// Validate MIME type if provided.
+		// Validate the MIME type if provided.
 		if ( isset( $this->args['mimeType'] ) && ! empty( $this->args['mimeType'] ) ) {
 			if ( ! in_array( $this->args['mimeType'], $this->accepted_mime_types, true ) ) {
-				throw new \InvalidArgumentException( 'Invalid MIME type format. Accepted mime types are: ' . esc_html( implode( ', ', $this->accepted_mime_types ) ) );
+				throw new InvalidArgumentException( 'Invalid MIME type format. Accepted mime types are: ' . esc_html( implode( ', ', $this->accepted_mime_types ) ) );
 			}
 		}
 
@@ -96,12 +98,12 @@ class RegisterMcpResource {
 	/**
 	 * Validate the resource content callback.
 	 *
-	 * @throws \InvalidArgumentException When validation fails.
+	 * @throws InvalidArgumentException When validation fails.
 	 * @return void
 	 */
 	private function validate_resource_content_callback(): void {
 		if ( ! is_callable( $this->resource_content_callback ) ) {
-			throw new \InvalidArgumentException( 'Resource content callback must be a callable' );
+			throw new InvalidArgumentException( 'Resource content callback must be a callable' );
 		}
 	}
 }

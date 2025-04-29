@@ -3,7 +3,9 @@
 declare(strict_types=1);
 namespace Automattic\WordpressMcp\Utils;
 
-use Automattic\WordpressMcp\WpMcp;
+use Automattic\WordpressMcp\Core\WpMcp;
+use Exception;
+use WP_REST_Request;
 
 /**
  * Handle Tools Call message.
@@ -29,7 +31,7 @@ class HandleToolsCall {
 
 		// Check if the tool exists.
 		if ( ! isset( $tools_callbacks[ $tool_name ] ) ) {
-			$response = array(
+			return array(
 				'jsonrpc' => '2.0',
 				'id'      => $message['id'] ?? null,
 				'error'   => array(
@@ -37,8 +39,6 @@ class HandleToolsCall {
 					'message' => 'Method not found: ' . $tool_name,
 				),
 			);
-
-			return $response;
 		}
 
 		// Get the tool callback.
@@ -67,9 +67,17 @@ class HandleToolsCall {
 				// Replace route parameters with actual values.
 				foreach ( $args as $key => $value ) {
 					$pattern = '(?P<' . $key . '>[\\d]+)';
-					$route   = str_replace( $pattern, (string) $value, $route );
+					$route   = str_replace( $pattern, is_array( $value ) ? json_encode( $value ) : (string) $value, $route );
 				}
-				$request = new \WP_REST_Request( $tool_callback['rest_alias']['method'], $route );
+				$request = new WP_REST_Request( $tool_callback['rest_alias']['method'], $route );
+
+				// Add default parameters for user-related requests.
+				if ( strpos( $route, '/wp/v2/users' ) !== false ) {
+					$request->set_param( 'context', 'view' );
+					$request->set_param( 'orderby', 'id' );
+					$request->set_param( 'who', 'authors' );
+				}
+
 				foreach ( $args as $key => $value ) {
 					$request->set_param( $key, $value );
 				}
@@ -93,7 +101,7 @@ class HandleToolsCall {
 						'result'  => $rest_response->get_data(),
 					);
 				}
-			} catch ( \Exception $e ) {
+			} catch ( Exception $e ) {
 				$response = array(
 					'jsonrpc' => '2.0',
 					'id'      => $message['id'],
@@ -113,7 +121,7 @@ class HandleToolsCall {
 					'id'      => $message['id'],
 					'result'  => $result,
 				);
-			} catch ( \Exception $e ) {
+			} catch ( Exception $e ) {
 				$response = array(
 					'jsonrpc' => '2.0',
 					'id'      => $message['id'],
@@ -126,18 +134,5 @@ class HandleToolsCall {
 		}
 
 		return $response;
-	}
-
-	/**
-	 * Handle tool call request.
-	 *
-	 * @param array $message The message.
-	 */
-	public static function handle( $message ): void {
-		$response = self::run( $message );
-
-		echo "event: message\n";
-		echo 'data: ' . wp_json_encode( $response ) . "\n\n";
-		flush();
 	}
 }
