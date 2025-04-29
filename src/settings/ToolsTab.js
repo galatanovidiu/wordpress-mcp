@@ -77,7 +77,7 @@ const ToolsTab = () => {
 						) }
 					</p>
 				) : (
-					<table className="wordpress-mcp-tools-table">
+					<table className="wordpress-mcp-table">
 						<thead>
 							<tr>
 								<th>{ __( 'Name', 'wordpress-mcp' ) }</th>

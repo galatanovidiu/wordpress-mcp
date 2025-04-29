@@ -1,24 +1,15 @@
 /**
  * WordPress dependencies
  */
-import { useState, useEffect, createRoot } from '@wordpress/element';
-import {
-	Card,
-	CardHeader,
-	CardBody,
-	CardFooter,
-	ToggleControl,
-	Button,
-	Notice,
-	Spinner,
-	TabPanel,
-} from '@wordpress/components';
+import { useState, useEffect } from '@wordpress/element';
+import { Notice, TabPanel } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
 // Import the extracted components
 import SettingsTab from './SettingsTab';
 import ToolsTab from './ToolsTab';
 import ResourcesTab from './ResourcesTab';
+import PromptsTab from './PromptsTab';
 
 /**
  * Settings App Component
@@ -119,6 +110,11 @@ export const SettingsApp = () => {
 			title: __( 'Resources', 'wordpress-mcp' ),
 			className: 'wordpress-mcp-resources-tab',
 		},
+		{
+			name: 'prompts',
+			title: __( 'Prompts', 'wordpress-mcp' ),
+			className: 'wordpress-mcp-prompts-tab',
+		},
 	];
 
 	return (
@@ -151,6 +147,8 @@ export const SettingsApp = () => {
 							return <ToolsTab />;
 						case 'resources':
 							return <ResourcesTab />;
+						case 'prompts':
+							return <PromptsTab />;
 						default:
 							return null;
 					}
@@ -159,12 +157,3 @@ export const SettingsApp = () => {
 		</div>
 	);
 };
-
-// Initialize the app when the DOM is ready
-document.addEventListener( 'DOMContentLoaded', function () {
-	const container = document.getElementById( 'wordpress-mcp-settings-app' );
-	if ( container ) {
-		const root = createRoot( container );
-		root.render( <SettingsApp /> );
-	}
-} );

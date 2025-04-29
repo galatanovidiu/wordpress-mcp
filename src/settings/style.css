@@ -45,49 +45,26 @@
 	margin-bottom: 20px;
 }
 
-/* Tools Table Styles */
-.wordpress-mcp-tools-table {
+/* Table Styles */
+.wordpress-mcp-table {
 	width: 100%;
 	border-collapse: collapse;
 	margin-top: 20px;
 }
 
-.wordpress-mcp-tools-table th,
-.wordpress-mcp-tools-table td {
+.wordpress-mcp-table th,
+.wordpress-mcp-table td {
 	padding: 12px;
 	text-align: left;
 	border-bottom: 1px solid #f0f0f1;
 }
 
-.wordpress-mcp-tools-table th {
+.wordpress-mcp-table th {
 	font-weight: 600;
 	background-color: #f8f9fa;
 }
 
-.wordpress-mcp-tools-table tr:hover {
-	background-color: #f8f9fa;
-}
-
-/* Resources Table Styles */
-.wordpress-mcp-resources-table {
-	width: 100%;
-	border-collapse: collapse;
-	margin-top: 20px;
-}
-
-.wordpress-mcp-resources-table th,
-.wordpress-mcp-resources-table td {
-	padding: 12px;
-	text-align: left;
-	border-bottom: 1px solid #f0f0f1;
-}
-
-.wordpress-mcp-resources-table th {
-	font-weight: 600;
-	background-color: #f8f9fa;
-}
-
-.wordpress-mcp-resources-table tr:hover {
+.wordpress-mcp-table tr:hover {
 	background-color: #f8f9fa;
 }
 
